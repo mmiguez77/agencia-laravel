@@ -36,3 +36,42 @@ Route::get('/imprimir', function () {
         ]
     );
 });
+
+// Vista Inicio
+Route::get('/inicio', function () {
+    return view('inicio');
+});
+
+// CRUD adminRegiones
+
+Route::get('/adminRegiones', function () {
+
+    // Obtenemos listado de Regiones
+    $regiones = DB::select('SELECT idRegion, regNombre FROM regiones');
+    // Retornar vista de admin
+    return view('adminRegiones', 
+        [ 
+            'regiones'=>$regiones
+        ]
+    );
+});
+
+Route::get('/agregarRegion', function () {
+    return view('agregarRegion');
+});
+
+Route::post('/agregarRegion', function () {
+
+    // Datos del form
+    $regNombre = $_POST['regNombre'];
+    // Insertamos datos en tabla de regiones
+    DB::insert("INSERT INTO regiones
+                        ( regNombre )
+                    VALUE
+                        ( :regNombre )",
+                [ $regNombre ] );
+    // Reporte
+    return redirect('/adminRegiones')
+                ->with(['mensaje' => 'Region: '.$regNombre.' agregada correctamente.']);
+
+});
